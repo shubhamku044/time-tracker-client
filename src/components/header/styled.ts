@@ -9,4 +9,6 @@ export const Con = styled.div`
   display: flex;
   align-items: center;
   z-index: 10;
+  position: sticky;
+  top: 0;
 `;

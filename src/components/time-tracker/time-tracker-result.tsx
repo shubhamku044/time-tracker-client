@@ -9,8 +9,20 @@ import {
   TrackerConRight,
   BinIcon
 } from './styled';
+import { deleteTimeStamp } from '../../store/actions';
+import { useAppDispatch } from '../../hooks';
 
-const TimeTrackerResult = () => {
+interface IProps {
+  id: string;
+  desc: string;
+  timeWorked: string;
+  startTime: string;
+  endTime: string;
+  projectName: string;
+}
+
+const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectName }: IProps) => {
+  const dispatch = useAppDispatch();
   return (
     <div>
       <DateCon>
@@ -19,22 +31,26 @@ const TimeTrackerResult = () => {
       <ResultCon>
         <ConText>
           <Desc>
-            bug fixes
+            {desc ? desc : 'Not mentioned'}
           </Desc>
           <ProjectName>
-            Abreader
+            {projectName ? projectName : 'Abreader'}
           </ProjectName>
         </ConText>
         <div>
           <p>
-            11:31 - 12:32
+            {startTime} - {endTime} 
           </p>
         </div>
         <TrackerConRight>
           <TimeSpent>
-            01:10:40
+            {timeWorked}
           </TimeSpent>
-          <BinIcon />
+          <BinIcon
+            onClick={() => {
+              dispatch(deleteTimeStamp(id));
+            }}
+          />
         </TrackerConRight>
       </ResultCon>
     </div>

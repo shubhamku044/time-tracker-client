@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 import { ImBin } from 'react-icons/im';
 
+interface IBtn {
+  timerStarted: boolean;
+}
 export const BinIcon = styled(ImBin)`
   color: #EB455F;
   cursor: pointer;
@@ -29,6 +32,8 @@ export const TrackerCon = styled.div`
   padding: 0.6rem;
   border-radius: 2px;
   box-shadow: 0 0 0 1px black;
+  position: sticky;
+  top: 60px;
 
   &:hover ${InputBox} {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.background};
@@ -99,9 +104,9 @@ export const TimeSpent = styled.p`
   color: white;
 `;
 
-export const BtnTracker = styled.button`
+export const BtnTracker = styled.button<IBtn>`
   padding: 0.6rem 2rem;
-  background-color: #62CDFF;
+  background-color: ${(props) => props.timerStarted ? '#EB455F' : '#62CDFF'};
   text-transform: uppercase;
   color: ${({ theme }) => theme.colors.header};
   font-size: ${({ theme }) => theme.fonts.xs};

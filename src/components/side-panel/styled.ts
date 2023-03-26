@@ -4,8 +4,8 @@ export const SidePanelCon = styled.div`
   width: 14rem;
   background-color: ${({theme}) => theme.colors.header};
   min-height: calc(100vh - 40px);
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: 40px;
 `;
 
 export const SidePanelEl = styled.div`

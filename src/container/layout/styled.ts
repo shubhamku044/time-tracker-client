@@ -7,5 +7,6 @@ export const LayoutCon = styled.div`
 
 export const ConApp = styled.div`
   flex: 1;
-  padding: 3rem 1rem;
+  padding: 3rem 1rem 1rem 1rem;
+  margin-left: 14rem;
 `;
