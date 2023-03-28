@@ -13,7 +13,9 @@ export const SidePanelEl = styled.div`
   flex-direction: column;
 
   & a {
-    display: block;
+    display: flex;
+    gap: 10px;
+    align-items: center;
     padding: 0.6rem 1.2rem;
     color: inherit;
     transition: all .2s ease-out;
