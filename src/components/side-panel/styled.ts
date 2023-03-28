@@ -16,7 +16,10 @@ export const SidePanelEl = styled.div`
     display: flex;
     gap: 10px;
     align-items: center;
-    padding: 0.6rem 1.2rem;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1rem 1.2rem;
     color: inherit;
     transition: all .2s ease-out;
 
