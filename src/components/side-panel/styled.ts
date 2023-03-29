@@ -36,7 +36,7 @@ export const HeadingText = styled.div`
 export const SidePanelEl = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  width: 100%;
 
   & a {
     display: flex;
