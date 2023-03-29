@@ -17,6 +17,7 @@ const TimeTrackerRecorder = () => {
   const [min, setMin] = useState<number>(0);
   const [hrs, setHrs] = useState<number>(0);
   const [desc, setDesc] = useState<string>('');
+  const [starttime,setStartTime] = useState<Date>(new Date());
 
 
   const tick = (): void => {
@@ -49,13 +50,16 @@ const TimeTrackerRecorder = () => {
 
   const handleBtnClick = () =>{
     setTimerStarted(!timerStarted);
+    const endDate : Date = new Date();
     if(timerStarted){
+      const startdate : Date = new Date();
+      setStartTime(startdate)
       dispatch(addTimeStamps({
         id: uuidv4(),
-        startTime: '11:11',
-        endTime: '22:22',
+        startTime:`${starttime.getHours()}:${starttime.getMinutes()}`,
+        endTime: `${endDate.getHours()}:${endDate.getMinutes()}`,
         desc,
-        timeWorked: '02:02:30',
+        timeWorked: formatTime(hrs,min,sec),
         projectName: 'Abreader'
       }));
 
