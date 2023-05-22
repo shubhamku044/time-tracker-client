@@ -1,0 +1,47 @@
+
+version: '3'
+services:
+  mongo:
+    image: mongo
+    ports:
+      - 27107:27107
+    container_name: time-tracker-database-container
+    networks:
+      - portfolio-project-network
+    volumes:
+      - mongoData:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=shubham
+      - MONGO_INITDB_ROOT_PASSWORD=helloworld
+      - MONGO_INITDB_DATABASE=tracker
+  server:
+    build:
+      context: './server'
+      dockerfile: Dockerfile
+    ports:
+      - 5500:5500
+    container_name: time-tracker-server-container
+    networks:
+      - portfolio-project-network
+    env_file: ./server/.env.local
+    volumes:
+      - ./server:/app
+    depends_on:
+      - mongo
+  client:
+    build:
+      context: './client'
+      dockerfile: Dockerfile
+    ports: 
+      - 8000:8000
+    container_name: time-tracker-client-container
+    networks:
+      - portfolio-project-network
+    volumes:
+      - ./client:/app
+    depends_on:
+      - server
+networks:
+  portfolio-project-network:
+volumes:
+  mongoData:
