@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   TrackerCon,
   InputBox,
   InputCon,
@@ -10,8 +10,6 @@ import {
 import { useAppDispatch } from '../../hooks';
 import { addTimeStamps } from '../../store/actions';
 import { v4 as uuidv4 } from 'uuid';
-import { addDoc, collection } from 'firebase/firestore';
-import { db } from '../../firebase';
 
 const TimeTrackerRecorder = () => {
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
@@ -19,7 +17,7 @@ const TimeTrackerRecorder = () => {
   const [min, setMin] = useState<number>(0);
   const [hrs, setHrs] = useState<number>(0);
   const [desc, setDesc] = useState<string>('');
-  const [starttime,setStartTime] = useState<Date>(new Date());
+  const [starttime, setStartTime] = useState<Date>(new Date());
 
 
   const tick = (): void => {
@@ -44,7 +42,7 @@ const TimeTrackerRecorder = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if(!timerStarted) return;
+    if (!timerStarted) return;
     const timerId = setInterval(tick, 1000);
 
     return () => clearInterval(timerId);
@@ -65,11 +63,11 @@ const TimeTrackerRecorder = () => {
     }
   };
 
-  const handleBtnClick = () =>{
+  const handleBtnClick = () => {
     setTimerStarted(!timerStarted);
-    const endDate : Date = new Date();
-    if(timerStarted){
-      const startdate : Date = new Date();
+    const endDate: Date = new Date();
+    if (timerStarted) {
+      const startdate: Date = new Date();
       setStartTime(startdate);
       const startTime = `${starttime.getHours()}:${starttime.getMinutes()}`;
       const endTime = `${endDate.getHours()}:${endDate.getMinutes()}`;
@@ -96,7 +94,7 @@ const TimeTrackerRecorder = () => {
   return (
     <TrackerCon>
       <InputCon>
-        <InputBox 
+        <InputBox
           type='text'
           placeholder='What are you working on?'
           disabled={timerStarted}

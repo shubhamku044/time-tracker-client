@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { collection, getDocs } from 'firebase/firestore'; 
-import { db } from '../../firebase';
 
 interface ITimerState {
   id: string;
@@ -24,14 +22,14 @@ export const getTimerData = createAsyncThunk('timer', async () => {
     const querySnapshot = await getDocs(collection(db, 'timer'));
     querySnapshot.forEach((doc) => {
       console.log('Fetching data...');
-      const chunk = { id: doc.id, ...doc.data()} as ITimerState;
+      const chunk = { id: doc.id, ...doc.data() } as ITimerState;
       data.push(chunk);
     });
 
     console.log(data);
 
     return data;
-  } catch(err) {
+  } catch (err) {
     console.log('Err');
   }
 });
@@ -54,7 +52,7 @@ const timerSlice = createSlice({
     },
     deleteTimeStamp: (state, action: PayloadAction<string>) => {
       console.log(action.payload);
-      state.value = state.value.filter(({id}) => id !== action.payload);
+      state.value = state.value.filter(({ id }) => id !== action.payload);
     },
   },
   extraReducers: (builder) => {
