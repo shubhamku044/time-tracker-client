@@ -1,12 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
+import moment from 'moment';
 
 interface ITask {
   projectName: string;
   desc: string;
-  isRunning: boolean;
+  isRunning?: boolean;
   startTime?: string;
   endTime?: string;
-  duration: number | null;
+  duration?: number;
 }
 
 const TaskSchema = new Schema<ITask>({
@@ -23,10 +24,9 @@ const TaskSchema = new Schema<ITask>({
   },
   startTime: {
     type: String,
+    default: moment().format('lll')
   },
-  endTime: {
-    type: String
-  },
+  endTime: {},
   duration: {
     type: Number
   }
