@@ -50,14 +50,7 @@ const TimeTrackerRecorder = () => {
 
   const addData = async (startTime: string, endTime: string, desc: string, timeWorked: string, projectName: string) => {
     try {
-      const docRef = await addDoc(collection(db, 'timer'), {
-        startTime,
-        endTime,
-        desc,
-        timeWorked,
-        projectName
-      });
-      console.log('Document written with ID: ', docRef.id);
+      console.log('trying');
     } catch (err) {
       console.log('ERROR');
     }

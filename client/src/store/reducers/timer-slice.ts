@@ -19,12 +19,6 @@ type InitialStateType = {
 export const getTimerData = createAsyncThunk('timer', async () => {
   try {
     const data: Array<ITimerState> = [];
-    const querySnapshot = await getDocs(collection(db, 'timer'));
-    querySnapshot.forEach((doc) => {
-      console.log('Fetching data...');
-      const chunk = { id: doc.id, ...doc.data() } as ITimerState;
-      data.push(chunk);
-    });
 
     console.log(data);
 
