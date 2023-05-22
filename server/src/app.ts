@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import type { Express, Request, Response } from 'express';
-import { viewRouter, projectRouter, userRouter } from './app/routes/index.js';
+import { viewRouter, projectRouter, userRouter, taskRouter } from './app/routes/index.js';
 
 const app: Express = express();
 
@@ -13,6 +13,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use('/', viewRouter);
 app.use('/api/v1/projects', projectRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/tasks', taskRouter);
 
 app.get('/health', (_: Request, res: Response) => {
   res.status(200).json({
