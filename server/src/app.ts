@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import cors from 'cors';
 import type { Express, Request, Response } from 'express';
 import { viewRouter, projectRouter, userRouter, taskRouter } from './app/routes/index.js';
 
@@ -8,6 +9,7 @@ const app: Express = express();
 app.use(morgan('tiny'));
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(cors());
 
 // Routes
 app.use('/', viewRouter);

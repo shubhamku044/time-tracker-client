@@ -1,13 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
+const apiUrl = new URL(import.meta.env.VITE_API_KEY as string);
+
 interface ITimerState {
-  id: string;
+  _id: string;
   startTime: string;
   endTime: string;
   desc: string;
   projectName: string;
-  timeWorked: string;
+  duration: string;
+  isRunning: boolean;
 }
 
 type InitialStateType = {
@@ -18,10 +21,9 @@ type InitialStateType = {
 
 export const getTimerData = createAsyncThunk('timer', async () => {
   try {
-    const data: Array<ITimerState> = [];
-
-    console.log(data);
-
+    const rawTasksData = await fetch(`${apiUrl}/tasks`);
+    const jsonData = await rawTasksData.json();
+    const data: Array<ITimerState> = jsonData.tasks;
     return data;
   } catch (err) {
     console.log('Err');
@@ -46,7 +48,7 @@ const timerSlice = createSlice({
     },
     deleteTimeStamp: (state, action: PayloadAction<string>) => {
       console.log(action.payload);
-      state.value = state.value.filter(({ id }) => id !== action.payload);
+      state.value = state.value.filter(({ _id }) => _id !== action.payload);
     },
   },
   extraReducers: (builder) => {

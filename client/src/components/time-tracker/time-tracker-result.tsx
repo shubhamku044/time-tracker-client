@@ -1,5 +1,4 @@
-import React from 'react';
-import { 
+import {
   ResultCon,
   DateCon,
   ConText,
@@ -11,6 +10,7 @@ import {
 } from './styled';
 import { deleteTimeStamp } from '../../store/actions';
 import { useAppDispatch } from '../../hooks';
+import moment from 'moment';
 
 interface IProps {
   id: string;
@@ -23,6 +23,9 @@ interface IProps {
 
 const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectName }: IProps) => {
   const dispatch = useAppDispatch();
+
+  const formatTime = (time: string): string => moment(time, 'MMMM DD, YYYY h:mm A').format('HH:mm');
+
   return (
     <div>
       <DateCon>
@@ -39,7 +42,7 @@ const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectNa
         </ConText>
         <div>
           <p>
-            {startTime} - {endTime} 
+            {formatTime(startTime)} - {formatTime(endTime)}
           </p>
         </div>
         <TrackerConRight>

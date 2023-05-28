@@ -48,11 +48,13 @@ const finishTask = catchAsync(async (req: Request, res: Response) => {
 
   const task = await Task.findById({ _id: id });
 
-  const endTime = moment().utcOffset(330).format('lll');
+  if (task.isRunning) {
+    const endTime = moment().utcOffset(330).format('lll');
 
-  task.endTime = endTime;
-  task.duration = parseFloat(moment.duration(moment(endTime).diff(moment(task.startTime))).as('hours').toFixed(2));
-  task.isRunning = false;
+    task.endTime = endTime;
+    task.duration = parseFloat(moment.duration(moment(endTime).diff(moment(task.startTime))).as('hours').toFixed(2));
+    task.isRunning = false;
+  }
 
   await task.save();
 
