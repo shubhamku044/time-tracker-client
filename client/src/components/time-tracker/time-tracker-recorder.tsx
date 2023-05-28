@@ -67,15 +67,6 @@ const TimeTrackerRecorder = () => {
       const timeWorked = formatTime(hrs, min, sec);
       const projectName = 'abreader';
 
-      dispatch(addTimeStamps({
-        id: uuidv4(),
-        startTime,
-        endTime,
-        desc,
-        timeWorked,
-        projectName
-      }));
-
       setSec(0);
       setHrs(0);
       setMin(0);
