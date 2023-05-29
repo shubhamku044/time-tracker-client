@@ -100,7 +100,7 @@ const TimeTrackerRecorder = () => {
     try {
       const data = {
         desc,
-        projectName: 'kumar'
+        projectName: selectedproject
       };
       const res = await fetch(`${apiUrl}/tasks`, {
         method: 'post',
