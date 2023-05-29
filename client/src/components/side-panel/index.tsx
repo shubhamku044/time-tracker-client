@@ -1,13 +1,11 @@
 
-import React from 'react';
-import { BiBarChartSquare, BiCalendar, BiTime } from 'react-icons/bi';
+import { BiCalendar, BiTime } from 'react-icons/bi';
 import { BsCardList, BsFileBarGraph, BsTag } from 'react-icons/bs';
 import { CiViewTimeline } from 'react-icons/ci';
 import { FaCog } from 'react-icons/fa';
 import { IoMdPeople } from 'react-icons/io';
-import { MdFace, MdSchedule } from 'react-icons/md';
+import { MdFace } from 'react-icons/md';
 import { RxDashboard } from 'react-icons/rx';
-import { VscProject } from 'react-icons/vsc';
 import { NavLink } from 'react-router-dom';
 import { HeadingText, LinkText, SidePanelCon, SidePanelEl } from './styled';
 'react-icons/md';
@@ -43,7 +41,7 @@ const SidePanel = () => {
       </SidePanelEl>
       <HeadingText>MANAGE</HeadingText>
       <SidePanelEl>
-        <NavLink to="/development">
+        <NavLink to="/projects">
           <BsCardList size={28} color="#9CA3AF" />
           <LinkText>PROJECTS</LinkText>
         </NavLink>

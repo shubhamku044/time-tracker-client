@@ -5,7 +5,10 @@ import {
   InputCon,
   TimeSpent,
   TrackerBtnCon,
-  BtnTracker
+  BtnTracker,
+  AvaiProjectsCon,
+  Projects,
+  SelectProject,
 } from './styled';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { addTask } from '../../store/actions';
@@ -29,9 +32,12 @@ const TimeTrackerRecorder = () => {
   const [min, setMin] = useState<number>(0);
   const [hrs, setHrs] = useState<number>(0);
   const [desc, setDesc] = useState<string>('');
+  const [showProject, setShowProject] = useState<boolean>(false);
   const [runningTimer, setRunningTimer] = useState<ITimerState>();
+  const [selectedproject, setSelectedProject] = useState<string>('');
 
   const timeStamps = useAppSelector(state => state.timer.value);
+  const projectsName = useAppSelector(state => state.projects.value);
 
   const extractTimeFromDate = (time: string): Array<number> => moment(time, 'MMMM D, YYYY h:mm:ss A').format('HH:mm:ss').split(':').map((el) => parseInt(el));
 
@@ -127,6 +133,26 @@ const TimeTrackerRecorder = () => {
           }}
           value={desc}
         />
+        <AvaiProjectsCon>
+          <SelectProject projectSelected={selectedproject ? true : false} onClick={() => setShowProject(prv => !prv)}>
+            {selectedproject ? selectedproject : 'Select Project'}
+          </SelectProject>
+          <Projects showProject={showProject}>
+            {projectsName.map((project) => {
+              return (
+                <li
+                  key={project._id}
+                  onClick={() => {
+                    setSelectedProject(project.name);
+                    setShowProject(false);
+                  }}
+                >
+                  {project.name}
+                </li>
+              );
+            })}
+          </Projects>
+        </AvaiProjectsCon>
       </InputCon>
       <TrackerBtnCon>
         <TimeSpent>
@@ -148,7 +174,7 @@ const TimeTrackerRecorder = () => {
           </BtnTracker>
         )}
       </TrackerBtnCon>
-    </TrackerCon>
+    </TrackerCon >
   );
 };
 

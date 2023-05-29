@@ -4,6 +4,15 @@ import { ImBin } from 'react-icons/im';
 interface IBtn {
   timerStarted: boolean;
 }
+
+interface IProjects {
+  showProject: boolean;
+}
+
+interface ISelectedProjects {
+  projectSelected: boolean;
+}
+
 export const BinIcon = styled(ImBin)`
   color: #EB455F;
   cursor: pointer;
@@ -61,12 +70,43 @@ export const ConText = styled.div`
 `;
 
 export const InputCon = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   flex: 1;
 `;
 
 export const Desc = styled.p`
   width: 16rem;
 `;
+
+export const AvaiProjectsCon = styled.div`
+  position: relative;
+`;
+
+export const Projects = styled.ul<IProjects>`
+  position: absolute;
+  background-color: #27374D;
+  top: calc(100% + 0.6rem);
+  left: 0;
+  width: 6rem;
+  font-size: ${({ theme }) => theme.fonts.xs};
+  border-radius: 4px;
+  display: ${(props) => props.showProject ? 'block' : 'none'};
+
+  li {
+    color: yellow;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+  }
+`;
+
+export const SelectProject = styled.div<ISelectedProjects>`
+  font-size: ${({ theme }) => theme.fonts.sm};
+  cursor: pointer;
+  color: ${(props) => props.projectSelected ? '#8696FE' : 'white8696FE'};
+`;
+
 
 export const ProjectName = styled.p`
   font-size: ${({ theme }) => theme.fonts.xs};

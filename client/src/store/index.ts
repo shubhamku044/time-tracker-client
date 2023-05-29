@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import timerReducer from './reducers/timer-slice';
+import projectSlice from './reducers/project-slice';
 
 export const store = configureStore({
   reducer: {
-    timer: timerReducer
+    timer: timerReducer,
+    projects: projectSlice
   },
 });
 

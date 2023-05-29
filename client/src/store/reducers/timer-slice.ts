@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 const apiUrl = new URL(import.meta.env.VITE_API_KEY as string);
 
-interface ITimerState {
+export interface ITimerState {
   _id: string;
   startTime: string;
   endTime: string;
@@ -85,7 +85,7 @@ const timerSlice = createSlice({
         state.loading = false;
         state.error = null;
       })
-      .addCase(getTimerData.rejected, (state, action) => {
+      .addCase(getTimerData.rejected, (state) => {
         state.loading = false;
         state.error = true;
       });
