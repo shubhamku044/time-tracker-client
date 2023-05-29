@@ -8,9 +8,9 @@ import {
   TrackerConRight,
   BinIcon
 } from './styled';
-import { deleteTimeStamp } from '../../store/actions';
 import { useAppDispatch } from '../../hooks';
 import moment from 'moment';
+import { deleteTask } from '../../store/actions';
 
 interface IProps {
   id: string;
@@ -24,7 +24,7 @@ interface IProps {
 const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectName }: IProps) => {
   const dispatch = useAppDispatch();
 
-  const formatTime = (time: string): string => moment(time, 'MMMM DD, YYYY h:mm A').format('HH:mm');
+  const formatTime = (time: string): string => moment(time, 'MMMM D, YYYY h:mm:ss A').format('HH:mm');
 
   return (
     <div>
@@ -47,12 +47,10 @@ const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectNa
         </div>
         <TrackerConRight>
           <TimeSpent>
-            {timeWorked}
+            {timeWorked} hr
           </TimeSpent>
           <BinIcon
-            onClick={() => {
-              dispatch(deleteTimeStamp(id));
-            }}
+            onClick={() => dispatch(deleteTask(id))}
           />
         </TrackerConRight>
       </ResultCon>

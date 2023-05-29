@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components';
 import { Layout, TimeTracker, Projects, UnderDevelopment } from './container';
-import { getTimerData } from './store/reducers/timer-slice';
+import { getTimerData } from './store/actions';
 import { useAppDispatch } from './hooks';
 
 function App() {

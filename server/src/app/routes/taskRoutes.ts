@@ -4,7 +4,7 @@ import { createTask, deleteTask, finishTask, getTasks, updateTask } from '../con
 
 const router: IRouter = Router();
 
-router.route('/').get(getTasks).post(createTask);
+router.route('/').post(createTask).get(getTasks);
 router.route('/:id').patch(updateTask).delete(deleteTask);
 router.route('/finish/:id').patch(finishTask);
 

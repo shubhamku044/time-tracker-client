@@ -30,6 +30,33 @@ export const getTimerData = createAsyncThunk('timer', async () => {
   }
 });
 
+export const deleteTask = createAsyncThunk('timer', async (taskId: string, thunkAPI) => {
+  try {
+    await fetch(`${apiUrl}/tasks/${taskId}`, {
+      method: 'DELETE'
+    });
+    const state = thunkAPI.getState() as { timer: InitialStateType };
+    const updatedTimerData = state.timer.value.filter(({ _id }) => _id !== taskId);
+    return updatedTimerData;
+  } catch (err) {
+    console.log('ERROR While deleting task', err);
+  }
+});
+
+export const addTask = createAsyncThunk('timer', async (taskId: string, thunkAPI) => {
+  try {
+    const res = await fetch(`${apiUrl}/tasks/finish/${taskId}`, {
+      method: 'PATCH',
+    });
+    const data = await res.json();
+    const state = thunkAPI.getState() as { timer: InitialStateType };
+    const updatedTimerData = [...state.timer.value, data.task];
+    return updatedTimerData;
+  } catch (err) {
+    console.log('ERROR while adding task', err);
+  }
+});
+
 const initialState: InitialStateType = {
   value: [],
   loading: false,
@@ -45,10 +72,6 @@ const timerSlice = createSlice({
     },
     addTimeStamps: (state, action: PayloadAction<ITimerState>) => {
       state.value.push(action.payload);
-    },
-    deleteTimeStamp: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
-      state.value = state.value.filter(({ _id }) => _id !== action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -69,6 +92,6 @@ const timerSlice = createSlice({
   }
 });
 
-export const { logger, addTimeStamps, deleteTimeStamp } = timerSlice.actions;
+export const { logger, addTimeStamps } = timerSlice.actions;
 
 export default timerSlice.reducer;

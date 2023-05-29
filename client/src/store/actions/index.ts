@@ -1,3 +1,3 @@
-import { addTimeStamps, deleteTimeStamp, getTimerData } from '../reducers/timer-slice';
+import { addTimeStamps, getTimerData, deleteTask, addTask } from '../reducers/timer-slice';
 
-export { addTimeStamps, deleteTimeStamp };
+export { addTimeStamps, getTimerData, deleteTask, addTask };

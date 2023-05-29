@@ -24,7 +24,7 @@ const createTask = catchAsync(async (req: Request, res: Response, next: NextFunc
     return next(new AppError(`No project found with name: ${projectName}`, StatusCodes.NOT_FOUND));
   }
 
-  const startTime = moment().utcOffset(330).format('lll');
+  const startTime = moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A');
 
   const task = {
     projectName,
@@ -39,7 +39,7 @@ const createTask = catchAsync(async (req: Request, res: Response, next: NextFunc
 
   res.status(StatusCodes.OK).json({
     message: 'Project created successfully',
-    newTask
+    task: newTask
   });
 });
 
@@ -49,7 +49,7 @@ const finishTask = catchAsync(async (req: Request, res: Response) => {
   const task = await Task.findById({ _id: id });
 
   if (task.isRunning) {
-    const endTime = moment().utcOffset(330).format('lll');
+    const endTime = moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A');
 
     task.endTime = endTime;
     task.duration = parseFloat(moment.duration(moment(endTime).diff(moment(task.startTime))).as('hours').toFixed(2));
