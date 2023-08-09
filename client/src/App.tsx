@@ -10,7 +10,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getTimerData());
-    dispatch(getProjectsData());
+    // dispatch(getProjectsData());
   }, []);
 
   return (

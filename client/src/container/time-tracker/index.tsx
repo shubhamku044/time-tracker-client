@@ -5,19 +5,19 @@ import { useAppSelector } from '../../hooks';
 const TimeTracker = () => {
 
   const timeStamps = useAppSelector(state => state.timer.value);
+  console.log(timeStamps);
 
   return (
     <Con>
       <TimeTrackerRecorder />
       <ResultsCon>
-        {timeStamps.map(({ _id, desc, duration, startTime, endTime, projectName, isRunning }) => {
-          if (isRunning) return;
+        {timeStamps.map(({ id, projectDescription, startTime, endTime, projectName, isRunning }) => {
           return (
             <TimeTrackerResult
-              key={_id}
-              id={_id}
-              desc={desc}
-              timeWorked={duration}
+              key={id}
+              id={id}
+              desc={projectDescription}
+              timeWorked={'21'}
               startTime={startTime}
               endTime={endTime}
               projectName={projectName}

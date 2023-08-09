@@ -15,10 +15,10 @@ import { addTask } from '../../store/actions';
 import moment from 'moment';
 
 interface ITimerState {
-  _id: string;
+  id: string;
   startTime: string;
   endTime: string;
-  desc: string;
+  projectDescription: string;
   projectName: string;
   duration: string;
   isRunning: boolean;
@@ -34,7 +34,7 @@ const TimeTrackerRecorder = () => {
   const [desc, setDesc] = useState<string>('');
   const [showProject, setShowProject] = useState<boolean>(false);
   const [runningTimer, setRunningTimer] = useState<ITimerState>();
-  const [selectedproject, setSelectedProject] = useState<string>('');
+  const [selectedproject, setSelectedProject] = useState<string>('Abreader');
 
   const timeStamps = useAppSelector(state => state.timer.value);
   const projectsName = useAppSelector(state => state.projects.value);
@@ -58,49 +58,16 @@ const TimeTrackerRecorder = () => {
     return `${hrs}:${min}:${sec}`;
   };
 
-
   const dispatch = useAppDispatch();
+  const startTime = moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A');
 
-  useEffect(() => {
-    if (!timerStarted) return;
-    const timerId = setInterval(tick, 1000);
-
-    return () => clearInterval(timerId);
-  });
-
-  useEffect(() => {
-    timeStamps.forEach((timeStamp) => {
-      if (timeStamp.isRunning) {
-        setRunningTimer(timeStamp);
-      }
-    });
-  }, [timeStamps]);
-
-  useEffect(() => {
-    if (runningTimer?.isRunning) {
-      setTimerStarted(true);
-      setDesc(runningTimer.desc);
-    }
-  }, [runningTimer]);
-
-
-  const finishTask = () => {
-    setTimerStarted(false);
-    if (timerStarted && runningTimer?.isRunning) {
-      dispatch(addTask(runningTimer?._id));
-
-      setSec(0);
-      setHrs(0);
-      setMin(0);
-      setDesc('');
-    }
-  };
   const createTask = async () => {
     if (!desc) return;
     try {
       const data = {
-        desc,
-        projectName: selectedproject
+        projectDescription: desc,
+        projectName: selectedproject,
+        startTime: moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A'),
       };
       const res = await fetch(`${apiUrl}/tasks`, {
         method: 'post',
@@ -111,11 +78,7 @@ const TimeTrackerRecorder = () => {
       });
 
       const resJson = await res.json();
-      setRunningTimer(resJson.task);
-      const startTimeArray: Array<number> = extractTimeFromDate((resJson.task as ITimerState).startTime);
-      setHrs(startTimeArray[0]);
-      setMin(startTimeArray[1]);
-      setSec(startTimeArray[2]);
+      console.log(resJson);
     } catch (err) {
       console.log('Error while creating task', err);
     }
@@ -156,23 +119,14 @@ const TimeTrackerRecorder = () => {
       </InputCon>
       <TrackerBtnCon>
         <TimeSpent>
-          {timerStarted ? formatTime(hrs, min, sec) : '00:00:00'}
+          22:00:00
         </TimeSpent>
-        {timerStarted ? (
-          <BtnTracker
-            timerStarted={timerStarted}
-            onClick={finishTask}
-          >
-            Stop
-          </BtnTracker>
-        ) : (
-          <BtnTracker
-            timerStarted={timerStarted}
-            onClick={createTask}
-          >
-            Start
-          </BtnTracker>
-        )}
+        <BtnTracker
+          timerStarted={timerStarted}
+          onClick={createTask}
+        >
+          Start
+        </BtnTracker>
       </TrackerBtnCon>
     </TrackerCon >
   );

@@ -4,12 +4,11 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 const apiUrl = new URL(import.meta.env.VITE_API_KEY as string);
 
 export interface ITimerState {
-  _id: string;
+  id: string;
   startTime: string;
   endTime: string;
-  desc: string;
+  projectDescription: string;
   projectName: string;
-  duration: string;
   isRunning: boolean;
 }
 
@@ -23,7 +22,7 @@ export const getTimerData = createAsyncThunk('timer', async () => {
   try {
     const rawTasksData = await fetch(`${apiUrl}/tasks`);
     const jsonData = await rawTasksData.json();
-    const data: Array<ITimerState> = jsonData.tasks;
+    const data: Array<ITimerState> = jsonData.data;
     return data;
   } catch (err) {
     console.log('Err');
@@ -36,7 +35,7 @@ export const deleteTask = createAsyncThunk('timer', async (taskId: string, thunk
       method: 'DELETE'
     });
     const state = thunkAPI.getState() as { timer: InitialStateType };
-    const updatedTimerData = state.timer.value.filter(({ _id }) => _id !== taskId);
+    const updatedTimerData = state.timer.value.filter(({ id }) => id !== taskId);
     return updatedTimerData;
   } catch (err) {
     console.log('ERROR While deleting task', err);

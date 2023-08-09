@@ -1,19 +1,30 @@
 
 version: '3'
 services:
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres
     ports:
-      - 27107:27107
-    container_name: time-tracker-database-container
+      - 5432:5432
+    container_name: time-tracker-postgres-container
     networks:
       - portfolio-project-network
     volumes:
-      - mongoData:/data/db
+      - postgresData:/var/lib/postgresql/data
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=shubham
-      - MONGO_INITDB_ROOT_PASSWORD=helloworld
-      - MONGO_INITDB_DATABASE=tracker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: shubham
+      POSTGRES_DB: time-tracker
+  pg-admin:
+    image: dpage/pgadmin4:6
+    ports:
+      - 5050:5050
+    container_name: time-tracker-pgadmin-container
+    networks:
+      - portfolio-project-network
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@email.com
+      PGADMIN_DEFAULT_PASSWORD: shubham
+      PGADMIN_LISTEN_PORT: 5050
   server:
     build:
       context: './server'
@@ -27,7 +38,7 @@ services:
     volumes:
       - ./server:/app
     depends_on:
-      - mongo
+      - postgres
   client:
     build:
       context: './client'
@@ -45,4 +56,4 @@ services:
 networks:
   portfolio-project-network:
 volumes:
-  mongoData:
+  postgresData:

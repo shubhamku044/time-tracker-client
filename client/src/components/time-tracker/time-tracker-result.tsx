@@ -34,20 +34,20 @@ const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectNa
       <ResultCon>
         <ConText>
           <Desc>
-            {desc ? desc : 'Not mentioned'}
+            This is the desc
           </Desc>
           <ProjectName>
-            {projectName ? projectName : 'Abreader'}
+            Abreader
           </ProjectName>
         </ConText>
         <div>
           <p>
-            {formatTime(startTime)} - {formatTime(endTime)}
+            22:00 - 00:00
           </p>
         </div>
         <TrackerConRight>
           <TimeSpent>
-            {timeWorked} hr
+            2 hr
           </TimeSpent>
           <BinIcon
             onClick={() => dispatch(deleteTask(id))}

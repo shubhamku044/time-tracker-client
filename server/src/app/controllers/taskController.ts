@@ -1,26 +1,24 @@
 import type { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { Project, Task } from './../models/index.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/appError.js';
 import moment from 'moment';
-
+import { AppDataSource } from '../../server.js';
+import { TaskModel } from '../entities/index.js';
 
 const getTasks = catchAsync(async (_: Request, res: Response) => {
-  const tasks = await Task.find({});
+  const data = await AppDataSource.manager.find(TaskModel);
 
   res.status(StatusCodes.OK).json({
     message: 'Success',
-    tasks
+    data,
   });
 });
 
 const createTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { projectName, desc } = req.body;
+  const { projectName, projectDescription } = req.body;
 
-  const project = await Project.find({ name: projectName });
-
-  if (!project.length) {
+  if (!projectName.length) {
     return next(new AppError(`No project found with name: ${projectName}`, StatusCodes.NOT_FOUND));
   }
 
@@ -28,54 +26,47 @@ const createTask = catchAsync(async (req: Request, res: Response, next: NextFunc
 
   const task = {
     projectName,
-    desc,
+    projectDescription,
     isRunning: true,
     startTime,
     endTime: '',
-    duration: null,
   };
 
-  const newTask = await Task.create(task);
+  const data = await AppDataSource.manager.save(TaskModel, task);
+  console.log(data);
 
   res.status(StatusCodes.OK).json({
     message: 'Project created successfully',
-    task: newTask
+    data
   });
 });
 
 const finishTask = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const task = await Task.findById({ _id: id });
-
-  if (task.isRunning) {
-    const endTime = moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A');
-
-    task.endTime = endTime;
-    task.duration = parseFloat(moment.duration(moment(endTime).diff(moment(task.startTime))).as('hours').toFixed(2));
-    task.isRunning = false;
-  }
-
-  await task.save();
-
   res.status(StatusCodes.OK).json({
     message: 'Successfully updated the task',
-    task
   });
 });
 
-const updateTask = catchAsync(async (req: Request, res: Response) => {
+const updateTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   console.log('Hello');
 });
 
-const deleteTask = catchAsync(async (req: Request, res: Response) => {
+const deleteTask = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
-  const task = await Task.findByIdAndDelete({ _id: id });
+  const task = await AppDataSource.getRepository(TaskModel).findOneBy({ id: Number(id) });
+
+  if (!task) {
+    return next(new AppError(`No task found with id: ${id}`, StatusCodes.NOT_FOUND));
+  }
+
+  await AppDataSource.getRepository(TaskModel).remove(task);
 
   res.status(StatusCodes.OK).json({
     message: 'Successfully deleted',
-    task
+    data: task,
   });
 });
 
