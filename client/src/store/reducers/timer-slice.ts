@@ -5,11 +5,11 @@ const apiUrl = new URL(import.meta.env.VITE_API_KEY as string);
 
 export interface ITimerState {
   id: string;
-  startTime: string;
-  endTime: string;
-  projectDescription: string;
+  description: string;
   projectName: string;
   isRunning: boolean;
+  finishedAt: string;
+  createdAt: string;
 }
 
 type InitialStateType = {
@@ -25,17 +25,21 @@ export const getTimerData = createAsyncThunk('timer', async () => {
     const data: Array<ITimerState> = jsonData.data;
     return data;
   } catch (err) {
-    console.log('Err');
+    console.log('Err', err);
   }
 });
 
 export const deleteTask = createAsyncThunk('timer', async (taskId: string, thunkAPI) => {
   try {
-    await fetch(`${apiUrl}/tasks/${taskId}`, {
+    const res = await fetch(`${apiUrl}/tasks/${taskId}`, {
       method: 'DELETE'
     });
     const state = thunkAPI.getState() as { timer: InitialStateType };
-    const updatedTimerData = state.timer.value.filter(({ id }) => id !== taskId);
+    let updatedTimerData = state.timer.value;
+
+    if (res.status === 200) {
+      updatedTimerData = state.timer.value.filter((task) => task.id !== taskId);
+    }
     return updatedTimerData;
   } catch (err) {
     console.log('ERROR While deleting task', err);

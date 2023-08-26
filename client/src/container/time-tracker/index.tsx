@@ -1,25 +1,32 @@
 import { Con, ResultsCon } from './styled';
 import { TimeTrackerRecorder, TimeTrackerResult } from '../../components';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useEffect } from 'react';
+import { getTimerData } from '../../store/actions';
 
 const TimeTracker = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getTimerData());
+  }, [dispatch]);
 
   const timeStamps = useAppSelector(state => state.timer.value);
-  console.log(timeStamps);
 
   return (
     <Con>
-      <TimeTrackerRecorder />
+      <TimeTrackerRecorder
+        projects={timeStamps}
+      />
       <ResultsCon>
-        {timeStamps.map(({ id, projectDescription, startTime, endTime, projectName, isRunning }) => {
+        {timeStamps?.filter(task => !task.isRunning).map(({ id, description, createdAt, finishedAt, projectName, isRunning }) => {
           return (
             <TimeTrackerResult
               key={id}
               id={id}
-              desc={projectDescription}
-              timeWorked={'21'}
-              startTime={startTime}
-              endTime={endTime}
+              desc={description}
+              createdAt={createdAt}
+              finishedAt={finishedAt}
               projectName={projectName}
             />
           );

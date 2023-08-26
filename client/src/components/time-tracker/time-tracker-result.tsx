@@ -15,34 +15,35 @@ import { deleteTask } from '../../store/actions';
 interface IProps {
   id: string;
   desc: string;
-  timeWorked: string;
-  startTime: string;
-  endTime: string;
   projectName: string;
+  createdAt: string;
+  finishedAt: string;
 }
 
-const TimeTrackerResult = ({ id, desc, timeWorked, startTime, endTime, projectName }: IProps) => {
+const TimeTrackerResult = ({ id, desc, createdAt, finishedAt, projectName }: IProps) => {
   const dispatch = useAppDispatch();
-
-  const formatTime = (time: string): string => moment(time, 'MMMM D, YYYY h:mm:ss A').format('HH:mm');
 
   return (
     <div>
       <DateCon>
-        Wed, Mar 22
+        {moment(createdAt).format('MMMM D, YYYY')}
       </DateCon>
       <ResultCon>
         <ConText>
           <Desc>
-            This is the desc
+            {desc}
           </Desc>
           <ProjectName>
-            Abreader
+            {projectName}
           </ProjectName>
         </ConText>
         <div>
-          <p>
-            22:00 - 00:00
+          <p
+            onClick={() => {
+              console.log('createdAt', createdAt, moment(createdAt).format('HH:MM a'));
+            }}
+          >
+            {moment(createdAt, 'YYYY-MM-DD HH:mm:ss.SSS').format('hh:mm a')} - {moment(finishedAt,'YYYY-MM-DD HH:mm:ss.SSS' ).format('hh:mm a')}
           </p>
         </div>
         <TrackerConRight>

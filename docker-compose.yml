@@ -1,4 +1,3 @@
-
 version: '3'
 services:
   postgres:
@@ -14,17 +13,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: shubham
       POSTGRES_DB: time-tracker
-  pg-admin:
-    image: dpage/pgadmin4:6
-    ports:
-      - 5050:5050
-    container_name: time-tracker-pgadmin-container
-    networks:
-      - portfolio-project-network
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@email.com
-      PGADMIN_DEFAULT_PASSWORD: shubham
-      PGADMIN_LISTEN_PORT: 5050
   server:
     build:
       context: './server'

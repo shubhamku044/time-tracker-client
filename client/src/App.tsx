@@ -1,17 +1,8 @@
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Header } from './components';
 import { Layout, TimeTracker, Projects, UnderDevelopment } from './container';
-import { getProjectsData, getTimerData } from './store/actions';
-import { useAppDispatch } from './hooks';
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(getTimerData());
-    // dispatch(getProjectsData());
-  }, []);
 
   return (
     <BrowserRouter>

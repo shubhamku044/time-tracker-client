@@ -11,23 +11,27 @@ import {
   SelectProject,
 } from './styled';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { addTask } from '../../store/actions';
+import { getTimerData } from '../../store/actions';
 import moment from 'moment';
 
 interface ITimerState {
   id: string;
-  startTime: string;
-  endTime: string;
-  projectDescription: string;
   projectName: string;
-  duration: string;
+  description: string;
+  createdAt: string;
   isRunning: boolean;
+  finishedAt: string;
 }
 
 const apiUrl = new URL(import.meta.env.VITE_API_KEY as string);
 
-const TimeTrackerRecorder = () => {
+interface IProps {
+  projects: Array<ITimerState>;
+}
+
+const TimeTrackerRecorder = ({projects}: IProps) => {
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
+  const [startedAt, setStartedAt] = useState<string>('');
   const [sec, setSec] = useState<number>(0);
   const [min, setMin] = useState<number>(0);
   const [hrs, setHrs] = useState<number>(0);
@@ -36,14 +40,12 @@ const TimeTrackerRecorder = () => {
   const [runningTimer, setRunningTimer] = useState<ITimerState>();
   const [selectedproject, setSelectedProject] = useState<string>('Abreader');
 
-  const timeStamps = useAppSelector(state => state.timer.value);
   const projectsName = useAppSelector(state => state.projects.value);
 
-  const extractTimeFromDate = (time: string): Array<number> => moment(time, 'MMMM D, YYYY h:mm:ss A').format('HH:mm:ss').split(':').map((el) => parseInt(el));
 
   const tick = (): void => {
-    const currTime = moment(moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A'));
-    const startTime = moment(moment(runningTimer?.startTime).format('MMMM D, YYYY h:mm:ss A'));
+    const currTime = moment();
+    const startTime = moment(startedAt);
     const duration = moment.duration(currTime.diff(startTime));
     setSec(duration.get('seconds'));
     setMin(duration.get('minutes'));
@@ -59,30 +61,71 @@ const TimeTrackerRecorder = () => {
   };
 
   const dispatch = useAppDispatch();
-  const startTime = moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A');
 
-  const createTask = async () => {
-    if (!desc) return;
+  const finishTask = async (): Promise<void> => {
     try {
-      const data = {
-        projectDescription: desc,
-        projectName: selectedproject,
-        startTime: moment().utcOffset(330).format('MMMM D, YYYY h:mm:ss A'),
-      };
-      const res = await fetch(`${apiUrl}/tasks`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+      const res = await fetch(`${apiUrl}/tasks/finish/${runningTimer?.id}`, {
+        method: 'PATCH',
       });
-
-      const resJson = await res.json();
-      console.log(resJson);
+      if(res.status !== 200) throw new Error('Something went wrong');
+      setTimerStarted(false);
+      setRunningTimer(undefined);
+      setDesc('');
+      setStartedAt('');
+      dispatch(getTimerData());
+      setSec(0);
+      setMin(0);
+      setHrs(0);
     } catch (err) {
-      console.log('Error while creating task', err);
+      console.log(err);
     }
   };
+
+  const startTask = async (): Promise<void> => {
+    try{
+      const res = await fetch(`${apiUrl}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          projectName: selectedproject,
+          description: desc,
+        })
+      });
+      const data = await res.json();
+      if(res.status === 200) {
+        setTimerStarted(true);
+        setRunningTimer(data.data);
+        setStartedAt(data.data.createdAt);
+        console.log(moment(data.data.createdAt, 'YYYY-MM-DD HH:mm:ss.SSS').format('HH:MM a'));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const runningProject = projects.filter((project) => {
+      return project.isRunning === true;
+    });
+
+    if(runningProject?.length ) {
+      setRunningTimer(runningProject[0] as ITimerState);
+      setTimerStarted(true);
+      setDesc(runningProject[0].description);
+      setStartedAt(runningProject[0].createdAt);
+    }
+  }, [projects]); 
+
+  useEffect(() => {
+    if(timerStarted) {
+      const interval = setInterval(() => {
+        tick();
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timerStarted]);
 
   return (
     <TrackerCon>
@@ -119,14 +162,23 @@ const TimeTrackerRecorder = () => {
       </InputCon>
       <TrackerBtnCon>
         <TimeSpent>
-          22:00:00
+          {formatTime(hrs, min, sec)}
         </TimeSpent>
-        <BtnTracker
-          timerStarted={timerStarted}
-          onClick={createTask}
-        >
-          Start
-        </BtnTracker>
+        {timerStarted ? (
+          <BtnTracker 
+            timerStarted={timerStarted}
+            onClick={finishTask}
+          >
+            Stop
+          </BtnTracker>
+        ) : (
+          <BtnTracker 
+            timerStarted={timerStarted}
+            onClick={startTask}
+          >
+            Start
+          </BtnTracker>
+        )}
       </TrackerBtnCon>
     </TrackerCon >
   );
