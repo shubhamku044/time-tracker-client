@@ -18,6 +18,7 @@ type InitialStateType = {
 
 export const getProjectsData = createAsyncThunk('projects', async () => {
   try {
+    console.log('getting project data');
     const rawTasksData = await fetch(`${apiUrl}/projects`);
     const jsonData = await rawTasksData.json();
     const data: Array<IProjectsState> = jsonData.projects;

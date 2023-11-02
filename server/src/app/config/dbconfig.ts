@@ -7,7 +7,7 @@ interface IDbConfig {
 }
 const dbConfig: IDbConfig = {
   user: 'shubham',
-  host: 'database',
+  host: 'postgres',
   database: 'tracker',
   password: 'helloworld',
   port: 5432,

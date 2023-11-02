@@ -2,13 +2,14 @@ import { Con, ResultsCon } from './styled';
 import { TimeTrackerRecorder, TimeTrackerResult } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { useEffect } from 'react';
-import { getTimerData } from '../../store/actions';
+import { getProjectsData, getTimerData } from '../../store/actions';
 
 const TimeTracker = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getTimerData());
+    dispatch(getProjectsData());
   }, [dispatch]);
 
   const timeStamps = useAppSelector(state => state.timer.value);

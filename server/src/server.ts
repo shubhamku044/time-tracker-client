@@ -7,10 +7,11 @@ dotenv.config({ path: './.env.local' });
 
 const PORT = process.env.PORT || 5500;
 
+console.log('running');
 (async () => {
   try {
     await prisma.$connect();
-    console.log('Connected to database');
+    console.log('Connected to database successfully');
   } catch (err) {
     console.error(err);
   }

@@ -6,7 +6,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:styled-components-a11y/recommended"
   ],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
@@ -16,7 +17,8 @@
   },
   "plugins": [
     "react",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "styled-components-a11y"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -45,6 +47,17 @@
     "semi": [
       "error",
       "always"
+    ],
+    "jsx-quotes": [
+      "error",
+      "prefer-double"
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxBOF": 1
+      }
     ]
   }
 }

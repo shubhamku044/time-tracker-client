@@ -24,7 +24,7 @@ export const InputBox = styled.input`
   border: none;
   padding: 0.6rem;
   font-size: ${({ theme }) => theme.fonts.sm};
-  color: ${({ theme }) => theme.colors.primary};
+  color: black;
   transition: all 0.3s ease-out;
 
   &:focus {
@@ -37,10 +37,10 @@ export const TrackerCon = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.header};
+  background-color: ${({ theme }) => theme.colors.primary};
   padding: 0.6rem;
   border-radius: 2px;
-  box-shadow: 0 0 0 1px black;
+  box-shadow: 0px 0px 6px 1px ${({ theme }) => theme.colors.black};
   position: sticky;
   top: 60px;
 
@@ -86,10 +86,11 @@ export const AvaiProjectsCon = styled.div`
 
 export const Projects = styled.ul<IProjects>`
   position: absolute;
-  background-color: #27374D;
+  background-color: white;
   top: calc(100% + 0.6rem);
   left: 0;
-  width: 6rem;
+  width: 16rem;
+  min-height: 13rem;
   font-size: ${({ theme }) => theme.fonts.xs};
   border-radius: 4px;
   display: ${(props) => props.showProject ? 'block' : 'none'};
@@ -104,9 +105,8 @@ export const Projects = styled.ul<IProjects>`
 export const SelectProject = styled.div<ISelectedProjects>`
   font-size: ${({ theme }) => theme.fonts.sm};
   cursor: pointer;
-  color: ${(props) => props.projectSelected ? '#8696FE' : 'white8696FE'};
+  color: black;
 `;
-
 
 export const ProjectName = styled.p`
   font-size: ${({ theme }) => theme.fonts.xs};
@@ -141,7 +141,7 @@ export const TrackerConRight = styled.div`
 
 export const TimeSpent = styled.p`
   font-size: ${({ theme }) => theme.fonts.md};
-  color: white;
+  color: black;
 `;
 
 export const BtnTracker = styled.button<IBtn>`

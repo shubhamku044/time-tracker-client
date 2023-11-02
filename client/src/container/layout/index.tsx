@@ -1,5 +1,4 @@
 import React from 'react';
-import { SidePanel } from '../../components';
 import { ConApp, LayoutCon } from './styled';
 
 interface IProps {
@@ -8,8 +7,7 @@ interface IProps {
 
 const Layout = ({ children }: IProps) => {
   return (
-    <LayoutCon>
-      <SidePanel />
+    <LayoutCon className="">
       <ConApp>
         {children}
       </ConApp>

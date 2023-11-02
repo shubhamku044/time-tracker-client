@@ -11,7 +11,7 @@ import {
   SelectProject,
 } from './styled';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getTimerData } from '../../store/actions';
+import { getProjectsData, getTimerData } from '../../store/actions';
 import moment from 'moment';
 
 interface ITimerState {
@@ -29,7 +29,7 @@ interface IProps {
   projects: Array<ITimerState>;
 }
 
-const TimeTrackerRecorder = ({projects}: IProps) => {
+const TimeTrackerRecorder = ({ projects }: IProps) => {
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
   const [startedAt, setStartedAt] = useState<string>('');
   const [sec, setSec] = useState<number>(0);
@@ -38,10 +38,8 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
   const [desc, setDesc] = useState<string>('');
   const [showProject, setShowProject] = useState<boolean>(false);
   const [runningTimer, setRunningTimer] = useState<ITimerState>();
-  const [selectedproject, setSelectedProject] = useState<string>('Abreader');
-
-  const projectsName = useAppSelector(state => state.projects.value);
-
+  const [selectedproject, setSelectedProject] = useState<string>('');
+  const [projectName, setProjectName] = useState<string>('');
 
   const tick = (): void => {
     const currTime = moment();
@@ -62,12 +60,14 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
 
   const dispatch = useAppDispatch();
 
+  const projectsName = useAppSelector(state => state.projects.value);
+
   const finishTask = async (): Promise<void> => {
     try {
       const res = await fetch(`${apiUrl}/tasks/finish/${runningTimer?.id}`, {
         method: 'PATCH',
       });
-      if(res.status !== 200) throw new Error('Something went wrong');
+      if (res.status !== 200) throw new Error('Something went wrong');
       setTimerStarted(false);
       setRunningTimer(undefined);
       setDesc('');
@@ -81,8 +81,30 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
     }
   };
 
+  const createProject = async () => {
+    if (projectName.length === 0) return;
+    try {
+      const projectData = {
+        name: projectName
+      };
+      const res = await fetch(`${apiUrl}/projects`, {
+        method: 'POST',
+        body: JSON.stringify(projectData),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (res.status === 200) {
+        dispatch(getProjectsData());
+        setProjectName('');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const startTask = async (): Promise<void> => {
-    try{
+    try {
       const res = await fetch(`${apiUrl}/tasks`, {
         method: 'POST',
         headers: {
@@ -94,7 +116,7 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
         })
       });
       const data = await res.json();
-      if(res.status === 200) {
+      if (res.status === 200) {
         setTimerStarted(true);
         setRunningTimer(data.data);
         setStartedAt(data.data.createdAt);
@@ -110,16 +132,17 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
       return project.isRunning === true;
     });
 
-    if(runningProject?.length ) {
+    if (runningProject?.length) {
       setRunningTimer(runningProject[0] as ITimerState);
       setTimerStarted(true);
       setDesc(runningProject[0].description);
       setStartedAt(runningProject[0].createdAt);
+      setSelectedProject(runningProject[0].projectName);
     }
-  }, [projects]); 
+  }, [projects]);
 
   useEffect(() => {
-    if(timerStarted) {
+    if (timerStarted) {
       const interval = setInterval(() => {
         tick();
       }, 1000);
@@ -131,8 +154,8 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
     <TrackerCon>
       <InputCon>
         <InputBox
-          type='text'
-          placeholder='What are you working on?'
+          type="text"
+          placeholder="What are you working on?"
           disabled={timerStarted}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setDesc(e.target.value);
@@ -144,19 +167,33 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
             {selectedproject ? selectedproject : 'Select Project'}
           </SelectProject>
           <Projects showProject={showProject}>
-            {projectsName.map((project) => {
+            {projectsName.map((project, id) => {
               return (
-                <li
-                  key={project._id}
-                  onClick={() => {
-                    setSelectedProject(project.name);
-                    setShowProject(false);
-                  }}
-                >
-                  {project.name}
+                <li key={id}>
+                  <button
+                    onClick={() => {
+                      setSelectedProject(project.name);
+                      setShowProject(false);
+                    }}
+                  >
+                    {project.name}
+                  </button>
                 </li>
               );
             })}
+            <div>
+              <input
+                placeholder="project name"
+                onChange={(e) => {
+                  setProjectName(e.target.value);
+                }}
+                value={projectName}
+              />
+              <button
+                style={{ fontSize: '2rem', color: 'black' }}
+                onClick={createProject}
+              >+</button>
+            </div>
           </Projects>
         </AvaiProjectsCon>
       </InputCon>
@@ -165,14 +202,14 @@ const TimeTrackerRecorder = ({projects}: IProps) => {
           {formatTime(hrs, min, sec)}
         </TimeSpent>
         {timerStarted ? (
-          <BtnTracker 
+          <BtnTracker
             timerStarted={timerStarted}
             onClick={finishTask}
           >
             Stop
           </BtnTracker>
         ) : (
-          <BtnTracker 
+          <BtnTracker
             timerStarted={timerStarted}
             onClick={startTask}
           >

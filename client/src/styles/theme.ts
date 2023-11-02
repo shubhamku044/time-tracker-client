@@ -3,7 +3,7 @@ export const theme = {
     primary: '#f1faee',
     secondary: '#457b9d',
     tertiary: '#a8dadc',
-    background: '#1d3557',
+    background: '#f1faee',
     text: '#f1faee',
     primaryTextColor: '#594F43',
     secondaryTextColor: '#777777',
@@ -17,7 +17,7 @@ export const theme = {
     light: '',
     danger: '',
     success: '#66A15A',
-    red: '#e63946', 
+    red: '#e63946',
     lightRed: '#ec9a9a',
     header: '#051720'
   },
